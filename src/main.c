@@ -16,12 +16,31 @@ Abelha abelhas[MAX_ABELHAS];
 int qtdAbelhas = 0;
 int proximoIdAbelha = 1;
 
+#define MAX_SENSORES 50
+
+typedef struct {
+    int idSensor;
+    int idAbelha;
+    float temperatura;
+    float umidade;
+} Sensor;
+
+Sensor sensores[MAX_SENSORES];
+int qtdSensores = 0;
+int proximoIdSensor = 1;
+
 void menuAbelhas();
 void cadastrarAbelha();
 void listarAbelhas();
 void buscarAbelha();
 void alterarAbelha();
 void removerAbelha();
+void menuSensores();
+void cadastrarSensor();
+void listarSensores();
+void buscarSensorPorAbelha();
+void alterarLeituraSensor();
+void removerSensor();
 
 int main() {
     int opcao;
@@ -42,7 +61,7 @@ int main() {
                 menuAbelhas(); 
                 break;
             case 2: 
-                printf("\nOpcao em desenvolvimento pelo Membro 2...\n"); 
+                menuSensores(); 
                 break;
             case 3: 
                 printf("\nOpcao em desenvolvimento pelo Membro 3...\n"); 
@@ -258,4 +277,185 @@ void removerAbelha() {
     } else {
         printf("\nOperacao cancelada.\n");
     }
+}
+
+void menuSensores() {
+    int op;
+    do {
+    printf("\n--- GERENCIAR SENSORES ---\n");
+    printf("1. Cadastrar sensor\n");
+    printf("2. Listar sensores\n");
+    printf("3. Buscar sensor por abelha\n");
+    printf("4. Alterar leitura\n");
+    printf("5. Remover sensor\n");
+    printf("6. Voltar\n");
+    printf("Opcao: ");
+
+    scanf("%d", &op);
+    getchar();
+
+    switch(op) {
+        case 1: cadastrarSensor(); break;
+        case 2: listarSensores(); break;
+        case 3: buscarSensorPorAbelha(); break;
+        case 4: alterarLeituraSensor(); break;
+        case 5: removerSensor(); break;
+        case 6: printf("Voltando ao menu principal...\n"); break;
+        default: printf("Opcao invalida!\n");
+    }
+
+} while(op != 6);
+}
+
+void cadastrarSensor() {
+    if (qtdSensores >= MAX_SENSORES) {
+        printf("\nLimite de sensores atingido!\n");
+        return;
+    }
+
+    int idAbelha;
+    int existe = 0;
+
+    printf("\n=== CADASTRAR SENSOR ===\n");
+    printf("Informe o ID da abelha vinculada: ");
+    scanf("%d", &idAbelha);
+    getchar();
+
+    for (int i = 0; i < qtdAbelhas; i++) {
+        if (abelhas[i].id == idAbelha) {
+            existe = 1;
+            break;
+        }
+    }
+
+    if (!existe) {
+        printf("\nErro: nao existe abelha com ID %d.\n", idAbelha);
+        return;
+    }
+
+    sensores[qtdSensores].idSensor = proximoIdSensor++;
+    sensores[qtdSensores].idAbelha = idAbelha;
+    
+    printf("Temperatura: ");
+    scanf("%f", &sensores[qtdSensores].temperatura);
+
+    printf("Umidade: ");
+    scanf("%f", &sensores[qtdSensores].umidade);
+    getchar();
+
+    qtdSensores++;
+
+    printf("\nSensor cadastrado com sucesso!\n");
+}
+
+void listarSensores() {
+    if (qtdSensores == 0) {
+        printf("\nNenhum sensor cadastrado.\n");
+        return;
+    }
+
+    printf("\n=== LISTA DE SENSORES ===\n");
+
+    for (int i = 0; i < qtdSensores; i++) {
+        printf("\nSensor ID: %d\n", sensores[i].idSensor);
+        printf("Abelha vinculada: %d\n", sensores[i].idAbelha);
+        printf("Temperatura: %.2f C\n", sensores[i].temperatura);
+        printf("Umidade: %.2f %%\n", sensores[i].umidade);
+    }
+}
+
+void buscarSensorPorAbelha() {
+    if (qtdSensores == 0) {
+        printf("\nNenhum sensor cadastrado.\n");
+        return;
+    }
+
+    int idAbelha;
+    int encontrou = 0;
+
+    printf("\nDigite o ID da abelha: ");
+    scanf("%d", &idAbelha);
+    getchar();
+
+    for (int i = 0; i < qtdSensores; i++) {
+        if (sensores[i].idAbelha == idAbelha) {
+            printf("\nSensor ID: %d\n", sensores[i].idSensor);
+            printf("Temperatura: %.2f C\n", sensores[i].temperatura);
+            printf("Umidade: %.2f %%\n", sensores[i].umidade);
+            encontrou = 1;
+        }
+    }
+
+    if (!encontrou) {
+        printf("\nNenhum sensor encontrado para essa abelha.\n");
+    }
+}
+
+void alterarLeituraSensor() {
+    if (qtdSensores == 0) {
+        printf("\nNenhum sensor cadastrado.\n");
+        return;
+    }
+
+    int idSensor;
+    int indice = -1;
+
+    printf("\nDigite o ID do sensor: ");
+    scanf("%d", &idSensor);
+    getchar();
+
+    for (int i = 0; i < qtdSensores; i++) {
+        if (sensores[i].idSensor == idSensor) {
+            indice = i;
+            break;
+        }
+    }
+
+    if (indice == -1) {
+        printf("\nSensor nao encontrado.\n");
+        return;
+    }
+
+    printf("Nova temperatura: ");
+    scanf("%f", &sensores[indice].temperatura);
+
+    printf("Nova umidade: ");
+    scanf("%f", &sensores[indice].umidade);
+    getchar();
+
+    printf("\nLeituras atualizadas com sucesso!\n");
+}
+
+void removerSensor() {
+    if (qtdSensores == 0) {
+        printf("\nNenhum sensor cadastrado.\n");
+        return;
+    }
+
+    int idSensor;
+    int indice = -1;
+
+    printf("\nDigite o ID do sensor a remover: ");
+    scanf("%d", &idSensor);
+    getchar();
+
+    for (int i = 0; i < qtdSensores; i++) {
+        if (sensores[i].idSensor == idSensor) {
+            indice = i;
+            break;
+        }
+    }
+
+    if (indice == -1) {
+        printf("\nSensor nao encontrado.\n");
+        return;
+    }
+
+    for (int i = indice; i < qtdSensores - 1; i++) {
+        sensores[i] = sensores[i + 1];
+    }
+
+    qtdSensores--;
+
+    printf("\nSensor removido e vetor reorganizado com sucesso!\n");
 }
