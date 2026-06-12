@@ -565,3 +565,50 @@ void abelhasPorRegiao() {
     printf("--------------------------------\n");
     printf("Total de regioes distintas: %d\n", totalRegioes);
 }
+void recomendarTratamento(float temp, float umid) {
+    printf("\n=== RECOMENDACOES BEE DOCTOR ===\n");
+
+    if (temp >= 32 && temp <= 36 && umid >= 50 && umid <= 80) {
+        printf("\nCOLONIA SAUDAVEL\n");
+        printf("- Manter monitoramento periodico.\n");
+        printf("- Continuar manejo atual.\n");
+        printf("- Realizar inspecoes preventivas.\n");
+    }
+
+    if (temp < 32) {
+        printf("\nPROBLEMA: TEMPERATURA BAIXA\n");
+        printf("- Melhorar isolamento da colmeia.\n");
+        printf("- Evitar ventos fortes.\n");
+        printf("- Monitorar temperatura diariamente.\n");
+    }
+
+    if (temp > 36) {
+        printf("\nPROBLEMA: TEMPERATURA ELEVADA\n");
+        printf("- Instalar sombra sobre a colmeia.\n");
+        printf("- Melhorar ventilacao.\n");
+        printf("- Disponibilizar agua para resfriamento.\n");
+    }
+
+    if (umid < 50) {
+        printf("\nPROBLEMA: BAIXA UMIDADE\n");
+        printf("- Verificar disponibilidade de agua.\n");
+        printf("- Evitar exposicao excessiva ao sol.\n");
+        printf("- Acompanhar as proximas leituras.\n");
+    }
+
+    if (umid > 80) {
+        printf("\nPROBLEMA: UMIDADE ELEVADA\n");
+        printf("- Melhorar drenagem do local.\n");
+        printf("- Aumentar ventilacao da colmeia.\n");
+        printf("- Verificar possivel aparecimento de fungos.\n");
+    }
+
+    if ((temp < 30 && umid > 80) || (temp > 35 && umid > 80)) {
+        printf("\nALERTA CRITICO\n");
+        printf("- Realizar inspecao urgente da colonia.\n");
+        printf("- Corrigir temperatura e umidade imediatamente.\n");
+        printf("- Avaliar riscos de doencas e perda da colonia.\n");
+    }
+
+    printf("\n=================================\n");
+}
