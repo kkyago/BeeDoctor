@@ -29,7 +29,6 @@ Sensor sensores[MAX_SENSORES];
 int qtdSensores = 0;
 int proximoIdSensor = 1;
 
-// PROTÓTIPOS DAS FUNÇÕES (Todos declarados aqui para o GCC não reclamar)
 void menuAbelhas();
 void cadastrarAbelha();
 void listarAbelhas();
@@ -69,7 +68,7 @@ int main() {
                 menuSensores(); 
                 break;
             case 3: 
-                menuRelatorios(); // Ligando o menu de relatórios que estava faltando aqui!
+                menuRelatorios();
                 break;
             case 4: 
                 printf("\nOpcao em desenvolvimento pelos Membros 4 e 5...\n"); 
