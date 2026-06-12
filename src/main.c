@@ -35,16 +35,21 @@ void listarAbelhas();
 void buscarAbelha();
 void alterarAbelha();
 void removerAbelha();
+
 void menuSensores();
 void cadastrarSensor();
 void listarSensores();
 void buscarSensorPorAbelha();
 void alterarLeituraSensor();
 void removerSensor();
+
 void menuRelatorios();
 float memel();
 float relatoriosensores();
 void abelhasPorRegiao();
+
+void menuDiagnostico();
+void realizardiagnostico();
 
 int main() {
     int opcao;
@@ -54,7 +59,7 @@ int main() {
         printf("1. Gerenciar Abelhas\n");
         printf("2. Gerenciar Sensores\n");
         printf("3. Relatorios\n");
-        printf("4. Desafio BeeGen (Genetica)\n"); 
+        printf("4. Desafio BeeDoctor (Diagnostico)\n"); 
         printf("5. Sair\n");
         printf("Escolha uma opcao: ");
         scanf("%d", &opcao);
@@ -71,7 +76,7 @@ int main() {
                 menuRelatorios();
                 break;
             case 4: 
-                printf("\nOpcao em desenvolvimento pelos Membros 4 e 5...\n"); 
+                menuDiagnostico(); 
                 break;
             case 5: 
                 printf("Encerrando o sistema...\n"); 
@@ -272,7 +277,7 @@ void removerAbelha() {
 
     if (confirmacao == 'S' || confirmacao == 's') {
         for (int i = indiceEncontrado; i < qtdAbelhas - 1; i++) {
-            edited: abelhas[i] = abelhas[i + 1];
+            abelhas[i] = abelhas[i + 1];
         }
 
         qtdAbelhas--;
@@ -426,7 +431,7 @@ void alterarLeituraSensor() {
     scanf("%f", &sensores[indice].umidade);
     getchar();
 
-    printf("\nLeituras atualizadas com sucesso!\n");
+    printf("\nLeituras updated com sucesso!\n");
 }
 
 void removerSensor() {
@@ -564,4 +569,89 @@ void abelhasPorRegiao() {
     }
     printf("--------------------------------\n");
     printf("Total de regioes distintas: %d\n", totalRegioes);
+}
+
+void menuDiagnostico() {
+    int op;
+    do {
+        printf("\n=== BEE DOCTOR ===\n");
+        printf("1. Diagnosticar colonia\n");
+        printf("2. Voltar\n");
+        printf("Opcao: ");
+        scanf("%d", &op);
+        getchar();
+        
+        if(op == 1) realizardiagnostico();
+    } while(op != 2);
+}
+
+void realizardiagnostico() {
+    if(qtdAbelhas == 0) {
+        printf("\nNenhuma abelha cadastrada!\n");
+        return;
+    }
+    
+    int id;
+    float temp, umid;
+    int encontrado = 0;
+    
+    printf("\nColonias disponiveis:\n");
+    for(int i = 0; i < qtdAbelhas; i++) {
+        printf("ID: %d - %s\n", abelhas[i].id, abelhas[i].nomePopular);
+    }
+    
+    printf("\nDigite o ID da colonia: ");
+    scanf("%d", &id);
+    getchar();
+    
+    for(int i = 0; i < qtdSensores; i++) {
+        if(sensores[i].idAbelha == id) {
+            temp = sensores[i].temperatura;
+            umid = sensores[i].umidade;
+            encontrado = 1;
+            break;
+        }
+    }
+    
+    if(!encontrado) {
+        printf("\nSem sensor para esta colonia!\n");
+        printf("Digite temperatura: ");
+        scanf("%f", &temp);
+        printf("Digite umidade: ");
+        scanf("%f", &umid);
+        getchar();
+    } else {
+        printf("\nTemperatura: %.1fC | Umidade: %.1f%%\n", temp, umid);
+    }
+    
+    printf("\n=== DIAGNOSTICO ===\n");
+    
+    if(temp < 32 || temp > 36) {
+        printf("ALERTA: Temperatura inadequada (ideal: 32-36C)\n");
+        if(temp < 32) printf("   -> Colonia muito fria\n");
+        else printf("   -> Colonia muito quente\n");
+    } else {
+        printf("Temperatura OK\n");
+    }
+    
+    if(umid < 50 || umid > 80) {
+        printf("ALERTA: Umidade inadequada (ideal: 50-80%%)\n");
+        if(umid < 50) printf("   -> Ambiente muito seco\n");
+        else printf("   -> Ambiente muito umido\n");
+    } else {
+        printf("Umidade OK\n");
+    }
+    
+    if((temp < 30 && umid > 80) || (temp > 35 && umid > 80)) {
+        printf("CRITICO: Combinacao de temperatura e umidade ruim!\n");
+    }
+    
+    if(temp >= 32 && temp <= 36 && umid >= 50 && umid <= 80) {
+        printf("\nCOLONIA SAUDAVEL!\n");
+    } else {
+        printf("\nNECESSITA ATENCAO!\n");
+    }
+    
+    printf("\nPressione ENTER...");
+    getchar();
 }
