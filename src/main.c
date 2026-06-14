@@ -29,6 +29,11 @@ Sensor sensores[MAX_SENSORES];
 int qtdSensores = 0;
 int proximoIdSensor = 1;
 
+#define RESET    "\x1b[0m"
+#define VERMELHO "\x1b[31m"
+#define VERDE    "\x1b[32m"
+#define AMARELO  "\x1b[33m"
+
 void menuAbelhas();
 void cadastrarAbelha();
 void listarAbelhas();
@@ -83,7 +88,7 @@ int main() {
                 printf("Encerrando o sistema...\n"); 
                 break;
             default: 
-                printf("Opcao invalida!\n");
+                printf(VERMELHO "Opcao invalida!" RESET "\n");
         }
     } while(opcao != 5);
 
@@ -105,14 +110,14 @@ void menuAbelhas() {
             case 4: alterarAbelha(); break;
             case 5: removerAbelha(); break;
             case 6: printf("Voltando ao menu principal...\n"); break;
-            default: printf("Opcao invalida!\n");
+            default: printf(VERMELHO "Opcao invalida!" RESET "\n");
         }
     } while(op != 6); 
 }
 
 void cadastrarAbelha() {
     if (qtdAbelhas >= MAX_ABELHAS) {
-        printf("\nErro: Limite maximo de abelhas cadastradas atingido!\n");
+        printf(VERMELHO "\nErro: Limite maximo de abelhas cadastradas atingido!" RESET "\n");
         return;
     }
 
@@ -140,12 +145,12 @@ void cadastrarAbelha() {
 
     qtdAbelhas++;
 
-    printf("\nAbelha cadastrada com sucesso!\n");
+    printf(VERDE "\nAbelha cadastrada com sucesso!" RESET "\n");
 }
 
 void listarAbelhas() {
     if (qtdAbelhas == 0) {
-        printf("\nNenhuma abelha cadastrada no sistema ate o momento.\n");
+        printf(AMARELO "\nNenhuma abelha cadastrada no sistema ate o momento." RESET "\n");
         return;
     }
 
@@ -168,7 +173,7 @@ void listarAbelhas() {
 
 void buscarAbelha() {
     if (qtdAbelhas == 0) {
-        printf("\nNenhuma abelha cadastrada no sistema.\n");
+        printf(AMARELO "\nNenhuma abelha cadastrada no sistema." RESET "\n");
         return;
     }
 
@@ -182,7 +187,7 @@ void buscarAbelha() {
 
     for (int i = 0; i < qtdAbelhas; i++) {
         if (strcmp(abelhas[i].nomePopular, termoBusca) == 0) {
-            printf("\nAbelha Encontrada:\n");
+            printf(VERDE "\nAbelha Encontrada:" RESET "\n");
             printf("ID: %d\n", abelhas[i].id);
             printf("Nome Popular: %s\n", abelhas[i].nomePopular);
             printf("Nome Cientifico: %s\n", abelhas[i].nomeCientifico);
@@ -194,13 +199,13 @@ void buscarAbelha() {
     }
 
     if (!encontrado) {
-        printf("\nNenhuma abelha encontrada com o nome \"%s\".\n", termoBusca);
+        printf(VERMELHO "\nNenhuma abelha encontrada com o nome \"%s\"." RESET "\n", termoBusca);
     }
 }
 
 void alterarAbelha() {
     if (qtdAbelhas == 0) {
-        printf("\nNenhuma abelha cadastrada para alterar.\n");
+        printf(AMARELO "\nNenhuma abelha cadastrada para alterar." RESET "\n");
         return;
     }
 
@@ -220,7 +225,7 @@ void alterarAbelha() {
     }
 
     if (indiceEncontrado == -1) {
-        printf("\nErro: Abelha com ID %d nao encontrada.\n", idBusca);
+        printf(VERMELHO "\nErro: Abelha com ID %d nao encontrada." RESET "\n", idBusca);
         return;
     }
 
@@ -242,12 +247,12 @@ void alterarAbelha() {
     scanf("%f", &abelhas[indiceEncontrado].producaoMel);
     getchar(); 
 
-    printf("\nDados alterados com sucesso!\n");
+    printf(VERDE "\nDados alterados com sucesso!" RESET "\n");
 }
 
 void removerAbelha() {
     if (qtdAbelhas == 0) {
-        printf("\nNenhuma abelha cadastrada para remover.\n");
+        printf(AMARELO "\nNenhuma abelha cadastrada para remover." RESET "\n");
         return;
     }
 
@@ -268,24 +273,24 @@ void removerAbelha() {
     }
 
     if (indiceEncontrado == -1) {
-        printf("\nErro: Abelha com ID %d nao encontrada.\n", idBusca);
+        printf(VERMELHO "\nErro: Abelha com ID %d nao encontrada." RESET "\n", idBusca);
         return;
     }
 
-    printf("Deseja realmente remover a abelha %s? (S/N): ", abelhas[indiceEncontrado].nomePopular);
+    printf(AMARELO "Deseja realmente remover a abelha %s? (S/N): " RESET, abelhas[indiceEncontrado].nomePopular);
     scanf(" %c", &confirmacao);
     getchar();
 
     if (confirmacao == 'S' || confirmacao == 's') {
         for (int i = indiceEncontrado; i < qtdAbelhas - 1; i++) {
-            abelhas[i] = abelhas[i + 1];
+             abelhas[i] = abelhas[i + 1];
         }
 
         qtdAbelhas--;
 
-        printf("\nRegistro removido e vetor reorganizado com sucesso!\n");
+        printf(VERDE "\nRegistro removido e vetor reorganizado com sucesso!" RESET "\n");
     } else {
-        printf("\nOperacao cancelada.\n");
+        printf(AMARELO "\nOperacao cancelada." RESET "\n");
     }
 }
 
@@ -311,14 +316,14 @@ void menuSensores() {
             case 4: alterarLeituraSensor(); break;
             case 5: removerSensor(); break;
             case 6: printf("Voltando ao menu principal...\n"); break;
-            default: printf("Opcao invalida!\n");
+            default: printf(VERMELHO "Opcao invalida!" RESET "\n");
         }
     } while(op != 6);
 }
 
 void cadastrarSensor() {
     if (qtdSensores >= MAX_SENSORES) {
-        printf("\nLimite de sensores atingido!\n");
+        printf(VERMELHO "\nLimite de sensores atingido!" RESET "\n");
         return;
     }
 
@@ -338,7 +343,7 @@ void cadastrarSensor() {
     }
 
     if (!existe) {
-        printf("\nErro: nao existe abelha com ID %d.\n", idAbelha);
+        printf(VERMELHO "\nErro: nao existe abelha com ID %d." RESET "\n", idAbelha);
         return;
     }
 
@@ -354,12 +359,12 @@ void cadastrarSensor() {
 
     qtdSensores++;
 
-    printf("\nSensor cadastrado com sucesso!\n");
+    printf(VERDE "\nSensor cadastrado com sucesso!" RESET "\n");
 }
 
 void listarSensores() {
     if (qtdSensores == 0) {
-        printf("\nNenhum sensor cadastrado.\n");
+        printf(AMARELO "\nNenhum sensor cadastrado." RESET "\n");
         return;
     }
 
@@ -375,7 +380,7 @@ void listarSensores() {
 
 void buscarSensorPorAbelha() {
     if (qtdSensores == 0) {
-        printf("\nNenhum sensor cadastrado.\n");
+        printf(AMARELO "\nNenhum sensor cadastrado." RESET "\n");
         return;
     }
 
@@ -396,13 +401,13 @@ void buscarSensorPorAbelha() {
     }
 
     if (!encontrou) {
-        printf("\nNenhum sensor encontrado para essa abelha.\n");
+        printf(VERMELHO "\nNenhum sensor encontrado para essa abelha." RESET "\n");
     }
 }
 
 void alterarLeituraSensor() {
     if (qtdSensores == 0) {
-        printf("\nNenhum sensor cadastrado.\n");
+        printf(AMARELO "\nNenhum sensor cadastrado." RESET "\n");
         return;
     }
 
@@ -421,7 +426,7 @@ void alterarLeituraSensor() {
     }
 
     if (indice == -1) {
-        printf("\nSensor nao encontrado.\n");
+        printf(VERMELHO "\nSensor nao encontrado." RESET "\n");
         return;
     }
 
@@ -432,12 +437,12 @@ void alterarLeituraSensor() {
     scanf("%f", &sensores[indice].umidade);
     getchar();
 
-    printf("\nLeituras atualizadas com sucesso!\n");
+    printf(VERDE "\nLeituras atualizadas com sucesso!" RESET "\n");
 }
 
 void removerSensor() {
     if (qtdSensores == 0) {
-        printf("\nNenhum sensor cadastrado.\n");
+        printf(AMARELO "\nNenhum sensor cadastrado." RESET "\n");
         return;
     }
 
@@ -456,7 +461,7 @@ void removerSensor() {
     }
 
     if (indice == -1) {
-        printf("\nSensor nao encontrado.\n");
+        printf(VERMELHO "\nSensor nao encontrado." RESET "\n");
         return;
     }
 
@@ -466,7 +471,7 @@ void removerSensor() {
 
     qtdSensores--;
 
-    printf("\nSensor removido e vetor reorganizado com sucesso!\n");
+    printf(VERDE "\nSensor removido e vetor reorganizado com sucesso!" RESET "\n");
 }
 
 void menuRelatorios() {
@@ -486,14 +491,14 @@ void menuRelatorios() {
             case 2: relatoriosensores(); break;
             case 3: abelhasPorRegiao();  break;
             case 4: printf("Voltando ao menu principal...\n"); break;
-            default: printf("Opcao invalida!\n");
+            default: printf(VERMELHO "Opcao invalida!" RESET "\n");
         }
     } while(opcao != 4);
 }
 
 float memel() {
     if (qtdAbelhas == 0) {
-        printf("\nNenhuma abelha cadastrada.\n");
+        printf(AMARELO "\nNenhuma abelha cadastrada." RESET "\n");
         return 0;
     }
 
@@ -508,14 +513,14 @@ float memel() {
     printf("\n=== RELATORIO: MEDIA DE PRODUCAO DE MEL ===\n");
     printf("Total de abelhas:  %d\n", qtdAbelhas);
     printf("Soma total:        %.2f kg/mes\n", somamel);
-    printf("Media geral:       %.2f kg/mes\n", resultado);
+    printf("Media geral:       " VERDE "%.2f kg/mes" RESET "\n", resultado);
 
     return resultado;
 }
 
 float relatoriosensores() {
     if (qtdSensores == 0) {
-        printf("\nNenhum sensor cadastrado.\n");
+        printf(AMARELO "\nNenhum sensor cadastrado." RESET "\n");
         return 0;
     }
 
@@ -529,14 +534,14 @@ float relatoriosensores() {
 
     printf("\n=== RELATORIO: MEDIA DE TEMPERATURA ===\n");
     printf("Total de sensores:    %d\n", qtdSensores);
-    printf("Media de temperatura: %.2f C\n", media);
+    printf("Media de temperatura: " VERDE "%.2f C" RESET "\n", media);
 
     return media;
 }
 
 void abelhasPorRegiao() {
     if (qtdAbelhas == 0) {
-        printf("\nNenhuma abelha cadastrada.\n");
+        printf(AMARELO "\nNenhuma abelha cadastrada." RESET "\n");
         return;
     }
 
@@ -566,7 +571,7 @@ void abelhasPorRegiao() {
     printf("%-20s | %s\n", "Regiao", "Qtd de Abelhas");
     printf("--------------------------------\n");
     for (int i = 0; i < totalRegioes; i++) {
-        printf("%-20s | %d\n", regioes[i], contagens[i]);
+        printf("%-20s | " VERDE "%d" RESET "\n", regioes[i], contagens[i]);
     }
     printf("--------------------------------\n");
     printf("Total de regioes distintas: %d\n", totalRegioes);
@@ -588,7 +593,7 @@ void menuDiagnostico() {
 
 void realizardiagnostico() {
     if(qtdAbelhas == 0) {
-        printf("\nNenhuma abelha cadastrada!\n");
+        printf(VERMELHO "\nNenhuma abelha cadastrada!" RESET "\n");
         return;
     }
     
@@ -615,7 +620,7 @@ void realizardiagnostico() {
     }
     
     if(!encontrado) {
-        printf("\nSem sensor para esta colonia!\n");
+        printf(AMARELO "\nSem sensor para esta colonia! Insira os dados manuais:" RESET "\n");
         printf("Digite temperatura: ");
         scanf("%f", &temp);
         printf("Digite umidade: ");
@@ -628,29 +633,29 @@ void realizardiagnostico() {
     printf("\n=== DIAGNOSTICO ===\n");
     
     if(temp < 32 || temp > 36) {
-        printf("ALERTA: Temperatura inadequada (ideal: 32-36C)\n");
+        printf(VERMELHO "ALERTA: Temperatura inadequada (ideal: 32-36C)" RESET "\n");
         if(temp < 32) printf("   -> Colonia muito fria\n");
         else printf("   -> Colonia muito quente\n");
     } else {
-        printf("Temperatura OK\n");
+        printf(VERDE "Temperatura OK" RESET "\n");
     }
     
     if(umid < 50 || umid > 80) {
-        printf("ALERTA: Umidade inadequada (ideal: 50-80%%)\n");
+        printf(VERMELHO "ALERTA: Umidade inadequada (ideal: 50-80%%)" RESET "\n");
         if(umid < 50) printf("   -> Ambiente muito seco\n");
         else printf("   -> Ambiente muito umido\n");
     } else {
-        printf("Umidade OK\n");
+        printf(VERDE "Umidade OK" RESET "\n");
     }
     
     if((temp < 30 && umid > 80) || (temp > 35 && umid > 80)) {
-        printf("CRITICO: Combinacao de temperatura e umidade ruim!\n");
+        printf(VERMELHO "CRITICO: Combinacao de temperatura e umidade ruim!" RESET "\n");
     }
     
     if(temp >= 32 && temp <= 36 && umid >= 50 && umid <= 80) {
-        printf("\nCOLONIA SAUDAVEL!\n");
+        printf(VERDE "\nCOLONIA SAUDAVEL!" RESET "\n");
     } else {
-        printf("\nNECESSITA ATENCAO!\n");
+        printf(VERMELHO "\nNECESSITA ATENCAO!" RESET "\n");
     }
     
     recomendarTratamento(temp, umid);
@@ -658,47 +663,46 @@ void realizardiagnostico() {
     printf("\nPressione ENTER...");
     getchar();
 }
-
 void recomendarTratamento(float temp, float umid) {
     printf("\n=== RECOMENDACOES BEE DOCTOR ===\n");
 
     if (temp >= 32 && temp <= 36 && umid >= 50 && umid <= 80) {
-        printf("\nCOLONIA SAUDAVEL\n");
+        printf(VERDE "COLONIA SAUDAVEL" RESET "\n");
         printf("- Manter monitoramento periodico.\n");
         printf("- Continuar manejo atual.\n");
         printf("- Realizar inspecoes preventivas.\n");
     }
 
     if (temp < 32) {
-        printf("\nPROBLEMA: TEMPERATURA BAIXA\n");
+        printf(AMARELO "PROBLEMA: TEMPERATURA BAIXA" RESET "\n");
         printf("- Melhorar isolamento da colmeia.\n");
         printf("- Evitar ventos fortes.\n");
         printf("- Monitorar temperatura diariamente.\n");
     }
 
     if (temp > 36) {
-        printf("\nPROBLEMA: TEMPERATURA ELEVADA\n");
+        printf(AMARELO "PROBLEMA: TEMPERATURA ELEVADA" RESET "\n");
         printf("- Instalar sombra sobre a colmeia.\n");
         printf("- Melhorar ventilacao.\n");
         printf("- Disponibilizar agua para resfriamento.\n");
     }
 
     if (umid < 50) {
-        printf("\nPROBLEMA: BAIXA UMIDADE\n");
+        printf(AMARELO "PROBLEMA: BAIXA UMIDADE" RESET "\n");
         printf("- Verificar disponibilidade de agua.\n");
         printf("- Evitar exposicao excessiva ao sol.\n");
         printf("- Acompanhar as proximas leituras.\n");
     }
 
     if (umid > 80) {
-        printf("\nPROBLEMA: UMIDADE ELEVADA\n");
+        printf(AMARELO "PROBLEMA: UMIDADE ELEVADA" RESET "\n");
         printf("- Melhorar drenagem do local.\n");
         printf("- Aumentar ventilacao da colmeia.\n");
         printf("- Verificar possivel aparecimento de fungos.\n");
     }
 
     if ((temp < 30 && umid > 80) || (temp > 35 && umid > 80)) {
-        printf("\nALERTA CRITICO\n");
+        printf(VERMELHO "ALERTA CRITICO" RESET "\n");
         printf("- Realizar inspecao urgente da colonia.\n");
         printf("- Corrigir temperatura e umidade imediatamente.\n");
         printf("- Avaliar riscos de doencas e perda da colonia.\n");
