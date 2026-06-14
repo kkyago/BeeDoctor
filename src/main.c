@@ -59,6 +59,7 @@ void recomendarTratamento(float temp, float umid);
 
 void salvarDados();
 void carregarDados();
+float lerFloatValido();
 
 int main() {
     carregarDados();
@@ -146,8 +147,7 @@ void cadastrarAbelha() {
     abelhas[qtdAbelhas].regiao[strcspn(abelhas[qtdAbelhas].regiao, "\n")] = '\0';
 
     printf("Digite a producao media de mel (kg/mes): ");
-    scanf("%f", &abelhas[qtdAbelhas].producaoMel);
-    getchar(); 
+    abelhas[qtdAbelhas].producaoMel = lerFloatValido();
 
     qtdAbelhas++;
 
@@ -250,8 +250,7 @@ void alterarAbelha() {
     abelhas[indiceEncontrado].regiao[strcspn(abelhas[indiceEncontrado].regiao, "\n")] = '\0';
 
     printf("Nova Producao Media de Mel (Atual: %.2f): ", abelhas[indiceEncontrado].producaoMel);
-    scanf("%f", &abelhas[indiceEncontrado].producaoMel);
-    getchar(); 
+    abelhas[indiceEncontrado].producaoMel = lerFloatValido();
 
     printf(VERDE "\nDados alterados com sucesso!" RESET "\n");
 }
@@ -357,11 +356,10 @@ void cadastrarSensor() {
     sensores[qtdSensores].idAbelha = idAbelha;
     
     printf("Temperatura: ");
-    scanf("%f", &sensores[qtdSensores].temperatura);
+    sensores[qtdSensores].temperatura = lerFloatValido();
 
     printf("Umidade: ");
-    scanf("%f", &sensores[qtdSensores].umidade);
-    getchar();
+    sensores[qtdSensores].umidade = lerFloatValido();
 
     qtdSensores++;
 
@@ -437,11 +435,10 @@ void alterarLeituraSensor() {
     }
 
     printf("Nova temperatura: ");
-    scanf("%f", &sensores[indice].temperatura);
+    sensores[indice].temperatura = lerFloatValido();
 
     printf("Nova umidade: ");
-    scanf("%f", &sensores[indice].umidade);
-    getchar();
+    sensores[indice].umidade = lerFloatValido();
 
     printf(VERDE "\nLeituras atualizadas com sucesso!" RESET "\n");
 }
@@ -628,10 +625,9 @@ void realizardiagnostico() {
     if(!encontrado) {
         printf(AMARELO "\nSem sensor para esta colonia! Insira os dados manuais:" RESET "\n");
         printf("Digite temperatura: ");
-        scanf("%f", &temp);
+        temp = lerFloatValido();
         printf("Digite umidade: ");
-        scanf("%f", &umid);
-        getchar();
+        umid = lerFloatValido();
     } else {
         printf("\nTemperatura: %.1fC | Umidade: %.1f%%\n", temp, umid);
     }
@@ -727,6 +723,7 @@ void salvarDados() {
     fwrite(&qtdAbelhas, sizeof(int), 1, arq);
     fwrite(&proximoIdAbelha, sizeof(int), 1, arq);
     fwrite(abelhas, sizeof(Abelha), qtdAbelhas, arq);
+
     fwrite(&qtdSensores, sizeof(int), 1, arq);
     fwrite(&proximoIdSensor, sizeof(int), 1, arq);
     fwrite(sensores, sizeof(Sensor), qtdSensores, arq);
@@ -737,15 +734,29 @@ void salvarDados() {
 void carregarDados() {
     FILE *arq = fopen("dados_sistema.dat", "rb");
     if (arq == NULL) {
-        return;
+        return; 
     }
 
     fread(&qtdAbelhas, sizeof(int), 1, arq);
     fread(&proximoIdAbelha, sizeof(int), 1, arq);
     fread(abelhas, sizeof(Abelha), qtdAbelhas, arq);
+
     fread(&qtdSensores, sizeof(int), 1, arq);
     fread(&proximoIdSensor, sizeof(int), 1, arq);
     fread(sensores, sizeof(Sensor), qtdSensores, arq);
 
     fclose(arq);
+}
+
+float lerFloatValido() {
+    float valor;
+    char caractereInvalido;
+
+    while (scanf("%f", &valor) != 1) {
+        printf(VERMELHO "Entrada invalida! Digite apenas numeros: " RESET);
+        
+        while ((caractereInvalido = getchar()) != '\n' && caractereInvalido != EOF);
+    }
+    getchar();
+    return valor;
 }
