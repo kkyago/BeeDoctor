@@ -57,7 +57,12 @@ void menuDiagnostico();
 void realizardiagnostico();
 void recomendarTratamento(float temp, float umid);
 
+void salvarDados();
+void carregarDados();
+
 int main() {
+    carregarDados();
+
     int opcao;
 
     do {
@@ -85,7 +90,8 @@ int main() {
                 menuDiagnostico(); 
                 break;
             case 5: 
-                printf("Encerrando o sistema...\n"); 
+                salvarDados();
+                printf("Dados salvos com sucesso! Encerrando o sistema...\n"); 
                 break;
             default: 
                 printf(VERMELHO "Opcao invalida!" RESET "\n");
@@ -663,6 +669,7 @@ void realizardiagnostico() {
     printf("\nPressione ENTER...");
     getchar();
 }
+
 void recomendarTratamento(float temp, float umid) {
     printf("\n=== RECOMENDACOES BEE DOCTOR ===\n");
 
@@ -709,4 +716,36 @@ void recomendarTratamento(float temp, float umid) {
     }
 
     printf("\n=================================\n");
+}
+
+void salvarDados() {
+    FILE *arq = fopen("dados_sistema.dat", "wb");
+    if (arq == NULL) {
+        return; 
+    }
+
+    fwrite(&qtdAbelhas, sizeof(int), 1, arq);
+    fwrite(&proximoIdAbelha, sizeof(int), 1, arq);
+    fwrite(abelhas, sizeof(Abelha), qtdAbelhas, arq);
+    fwrite(&qtdSensores, sizeof(int), 1, arq);
+    fwrite(&proximoIdSensor, sizeof(int), 1, arq);
+    fwrite(sensores, sizeof(Sensor), qtdSensores, arq);
+
+    fclose(arq);
+}
+
+void carregarDados() {
+    FILE *arq = fopen("dados_sistema.dat", "rb");
+    if (arq == NULL) {
+        return;
+    }
+
+    fread(&qtdAbelhas, sizeof(int), 1, arq);
+    fread(&proximoIdAbelha, sizeof(int), 1, arq);
+    fread(abelhas, sizeof(Abelha), qtdAbelhas, arq);
+    fread(&qtdSensores, sizeof(int), 1, arq);
+    fread(&proximoIdSensor, sizeof(int), 1, arq);
+    fread(sensores, sizeof(Sensor), qtdSensores, arq);
+
+    fclose(arq);
 }
