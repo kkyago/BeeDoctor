@@ -3,7 +3,7 @@
 #include <string.h>
 
 #define MAX_ABELHAS 50
-#define MAX_SENSORES 50
+#define MAX_SENSORES 100
 
 #define RESET    "\x1b[0m"
 #define VERMELHO "\x1b[31m"
