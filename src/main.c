@@ -3,6 +3,12 @@
 #include <string.h>
 
 #define MAX_ABELHAS 50
+#define MAX_SENSORES 50
+
+#define RESET    "\x1b[0m"
+#define VERMELHO "\x1b[31m"
+#define VERDE    "\x1b[32m"
+#define AMARELO  "\x1b[33m"
 
 typedef struct {
     int id;
@@ -16,8 +22,6 @@ Abelha abelhas[MAX_ABELHAS];
 int qtdAbelhas = 0;
 int proximoIdAbelha = 1;
 
-#define MAX_SENSORES 50
-
 typedef struct {
     int idSensor;
     int idAbelha;
@@ -28,11 +32,6 @@ typedef struct {
 Sensor sensores[MAX_SENSORES];
 int qtdSensores = 0;
 int proximoIdSensor = 1;
-
-#define RESET    "\x1b[0m"
-#define VERMELHO "\x1b[31m"
-#define VERDE    "\x1b[32m"
-#define AMARELO  "\x1b[33m"
 
 void menuAbelhas();
 void cadastrarAbelha();
@@ -147,9 +146,10 @@ void cadastrarAbelha() {
     abelhas[qtdAbelhas].regiao[strcspn(abelhas[qtdAbelhas].regiao, "\n")] = '\0';
 
     printf("Digite a producao media de mel (kg/mes): ");
-    abelhas[qtdAbelhas].producaoMel = lerFloatValido();
+    abelhas[qtdAbelhas].producaoMel = lerFloatValido(); 
 
     qtdAbelhas++;
+    salvarDados();
 
     printf(VERDE "\nAbelha cadastrada com sucesso!" RESET "\n");
 }
@@ -250,7 +250,9 @@ void alterarAbelha() {
     abelhas[indiceEncontrado].regiao[strcspn(abelhas[indiceEncontrado].regiao, "\n")] = '\0';
 
     printf("Nova Producao Media de Mel (Atual: %.2f): ", abelhas[indiceEncontrado].producaoMel);
-    abelhas[indiceEncontrado].producaoMel = lerFloatValido();
+    abelhas[indiceEncontrado].producaoMel = lerFloatValido(); 
+
+    salvarDados();
 
     printf(VERDE "\nDados alterados com sucesso!" RESET "\n");
 }
@@ -292,6 +294,7 @@ void removerAbelha() {
         }
 
         qtdAbelhas--;
+        salvarDados();
 
         printf(VERDE "\nRegistro removido e vetor reorganizado com sucesso!" RESET "\n");
     } else {
@@ -356,12 +359,13 @@ void cadastrarSensor() {
     sensores[qtdSensores].idAbelha = idAbelha;
     
     printf("Temperatura: ");
-    sensores[qtdSensores].temperatura = lerFloatValido();
+    sensores[qtdSensores].temperatura = lerFloatValido(); 
 
     printf("Umidade: ");
-    sensores[qtdSensores].umidade = lerFloatValido();
+    sensores[qtdSensores].umidade = lerFloatValido(); 
 
     qtdSensores++;
+    salvarDados();
 
     printf(VERDE "\nSensor cadastrado com sucesso!" RESET "\n");
 }
@@ -435,10 +439,12 @@ void alterarLeituraSensor() {
     }
 
     printf("Nova temperatura: ");
-    sensores[indice].temperatura = lerFloatValido();
+    sensores[indice].temperatura = lerFloatValido(); 
 
     printf("Nova umidade: ");
-    sensores[indice].umidade = lerFloatValido();
+    sensores[indice].umidade = lerFloatValido(); 
+
+    salvarDados();
 
     printf(VERDE "\nLeituras atualizadas com sucesso!" RESET "\n");
 }
@@ -473,6 +479,7 @@ void removerSensor() {
     }
 
     qtdSensores--;
+    salvarDados();
 
     printf(VERDE "\nSensor removido e vetor reorganizado com sucesso!" RESET "\n");
 }
@@ -625,9 +632,9 @@ void realizardiagnostico() {
     if(!encontrado) {
         printf(AMARELO "\nSem sensor para esta colonia! Insira os dados manuais:" RESET "\n");
         printf("Digite temperatura: ");
-        temp = lerFloatValido();
+        temp = lerFloatValido(); 
         printf("Digite umidade: ");
-        umid = lerFloatValido();
+        umid = lerFloatValido(); 
     } else {
         printf("\nTemperatura: %.1fC | Umidade: %.1f%%\n", temp, umid);
     }
@@ -754,9 +761,8 @@ float lerFloatValido() {
 
     while (scanf("%f", &valor) != 1) {
         printf(VERMELHO "Entrada invalida! Digite apenas numeros: " RESET);
-        
         while ((caractereInvalido = getchar()) != '\n' && caractereInvalido != EOF);
     }
-    getchar();
+    getchar(); 
     return valor;
 }
