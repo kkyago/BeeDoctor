@@ -25,8 +25,8 @@ int proximoIdAbelha = 1;
 typedef struct {
     int idSensor;
     int idAbelha;
-    float temperatura;
-    float umidade;
+    int tipo;
+    float valor;
 } Sensor;
 
 Sensor sensores[MAX_SENSORES];
@@ -280,14 +280,33 @@ void removerAbelha() {
     scanf(" %c", &conf);
     getchar();
 
-    if (conf == 'S' || conf == 's') {
-        //empurra tudo uma posicao pra tras pra nao ficar buraco no vetor
-        for (int i = pos; i < qtdAbelhas - 1; i++) {
-            abelhas[i] = abelhas[i + 1];
+if (conf == 'S' || conf == 's') {
+
+    // Remove todos os sensores vinculados a essa abelha
+    for (int i = 0; i < qtdSensores; i++) {
+
+        if (sensores[i].idAbelha == id) {
+
+            for (int j = i; j < qtdSensores - 1; j++) {
+                sensores[j] = sensores[j + 1];
+            }
+
+            qtdSensores--;
+            i--;
         }
-        qtdAbelhas--;
-        salvarDados();
-        printf(VERDE "Removido!\n" RESET);
+    }
+
+    // empurra tudo uma posicao pra tras para nao ficar buraco no vetor
+    for (int i = pos; i < qtdAbelhas - 1; i++) {
+        abelhas[i] = abelhas[i + 1];
+    }
+
+    qtdAbelhas--;
+
+    salvarDados();
+
+    printf(VERDE "Abelha e sensores vinculados removidos!\n" RESET);
+    
     } else {
         printf(AMARELO "Cancelado\n" RESET);
     }
@@ -329,8 +348,10 @@ void cadastrarSensor() {
 
     int idAbelha;
     int existe = 0;
+    int tipo;
 
     printf("\n=== CADASTRAR SENSOR ===\n");
+
     printf("Informe o ID da abelha vinculada: ");
     scanf("%d", &idAbelha);
     getchar();
@@ -343,78 +364,98 @@ void cadastrarSensor() {
     }
 
     if (!existe) {
-        printf(VERMELHO "\nErro: nao existe abelha com ID %d." RESET "\n", idAbelha);
+        printf(VERMELHO "Abelha nao encontrada!\n" RESET);
+        return;
+    }
+
+    printf("\nTipo do sensor:\n");
+    printf("1 - Temperatura\n");
+    printf("2 - Umidade\n");
+    printf("3 - Luminosidade\n");
+    printf("Opcao: ");
+    scanf("%d", &tipo);
+    getchar();
+
+    if(tipo < 1 || tipo > 3) {
+        printf(VERMELHO "Tipo invalido!\n" RESET);
         return;
     }
 
     sensores[qtdSensores].idSensor = proximoIdSensor++;
     sensores[qtdSensores].idAbelha = idAbelha;
-    
-    printf("Temperatura: ");
-    sensores[qtdSensores].temperatura = lerFloatValido(); 
+    sensores[qtdSensores].tipo = tipo;
 
-    printf("Umidade: ");
-    sensores[qtdSensores].umidade = lerFloatValido(); 
+    printf("Valor da leitura: ");
+    sensores[qtdSensores].valor = lerFloatValido();
 
     qtdSensores++;
+
     salvarDados();
 
-    printf(VERDE "\nSensor cadastrado com sucesso!" RESET "\n");
+    printf(VERDE "Sensor cadastrado com sucesso!\n" RESET);
 }
 
 void listarSensores() {
     if (qtdSensores == 0) {
-        printf(AMARELO "\nNenhum sensor cadastrado." RESET "\n");
+        printf(AMARELO "\nNenhum sensor cadastrado.\n" RESET);
         return;
     }
 
     printf("\n=== LISTA DE SENSORES ===\n");
 
     for (int i = 0; i < qtdSensores; i++) {
+
         printf("\nSensor ID: %d\n", sensores[i].idSensor);
         printf("Abelha vinculada: %d\n", sensores[i].idAbelha);
-        printf("Temperatura: %.2f C\n", sensores[i].temperatura);
-        printf("Umidade: %.2f %%\n", sensores[i].umidade);
+
+        if (sensores[i].tipo == 1)
+            printf("Tipo: Temperatura\n");
+        else if (sensores[i].tipo == 2)
+            printf("Tipo: Umidade\n");
+        else
+            printf("Tipo: Luminosidade\n");
+
+        printf("Leitura: %.2f\n", sensores[i].valor);
     }
 }
 
 void buscarSensorPorAbelha() {
-    if (qtdSensores == 0) {
-        printf(AMARELO "\nNenhum sensor cadastrado." RESET "\n");
-        return;
-    }
-
     int idAbelha;
     int encontrou = 0;
 
-    printf("\nDigite o ID da abelha: ");
+    printf("Digite o ID da abelha: ");
     scanf("%d", &idAbelha);
     getchar();
 
     for (int i = 0; i < qtdSensores; i++) {
+
         if (sensores[i].idAbelha == idAbelha) {
+
             printf("\nSensor ID: %d\n", sensores[i].idSensor);
-            printf("Temperatura: %.2f C\n", sensores[i].temperatura);
-            printf("Umidade: %.2f %%\n", sensores[i].umidade);
+
+            if (sensores[i].tipo == 1)
+                printf("Tipo: Temperatura\n");
+            else if (sensores[i].tipo == 2)
+                printf("Tipo: Umidade\n");
+            else
+                printf("Tipo: Luminosidade\n");
+
+            printf("Leitura: %.2f\n", sensores[i].valor);
+
             encontrou = 1;
         }
     }
 
     if (!encontrou) {
-        printf(VERMELHO "\nNenhum sensor encontrado para essa abelha." RESET "\n");
+        printf(VERMELHO "Nenhum sensor encontrado.\n" RESET);
     }
 }
 
 void alterarLeituraSensor() {
-    if (qtdSensores == 0) {
-        printf(AMARELO "\nNenhum sensor cadastrado." RESET "\n");
-        return;
-    }
-
     int idSensor;
     int indice = -1;
 
-    printf("\nDigite o ID do sensor: ");
+    printf("ID do sensor: ");
     scanf("%d", &idSensor);
     getchar();
 
@@ -426,19 +467,16 @@ void alterarLeituraSensor() {
     }
 
     if (indice == -1) {
-        printf(VERMELHO "\nSensor nao encontrado." RESET "\n");
+        printf(VERMELHO "Sensor nao encontrado!\n" RESET);
         return;
     }
 
-    printf("Nova temperatura: ");
-    sensores[indice].temperatura = lerFloatValido(); 
-
-    printf("Nova umidade: ");
-    sensores[indice].umidade = lerFloatValido(); 
+    printf("Nova leitura: ");
+    sensores[indice].valor = lerFloatValido();
 
     salvarDados();
 
-    printf(VERDE "\nLeituras atualizadas com sucesso!" RESET "\n");
+    printf(VERDE "Leitura atualizada!\n" RESET);
 }
 
 void removerSensor() {
@@ -521,22 +559,26 @@ float memel() {
 }
 
 float relatoriosensores() {
-    if (qtdSensores == 0) {
-        printf(AMARELO "\nNenhum sensor cadastrado." RESET "\n");
+
+    float soma = 0;
+    int quantidade = 0;
+
+    for (int i = 0; i < qtdSensores; i++) {
+
+        if (sensores[i].tipo == 1) {
+            soma += sensores[i].valor;
+            quantidade++;
+        }
+    }
+
+    if (quantidade == 0) {
+        printf(AMARELO "Nao existem sensores de temperatura.\n" RESET);
         return 0;
     }
 
-    float somadetemperatura = 0;
+    float media = soma / quantidade;
 
-    for (int i = 0; i < qtdSensores; i++) {
-        somadetemperatura += sensores[i].temperatura;
-    }
-
-    float media = somadetemperatura / qtdSensores;
-
-    printf("\n=== RELATORIO: MEDIA DE TEMPERATURA ===\n");
-    printf("Total de sensores:    %d\n", qtdSensores);
-    printf("Media de temperatura: " VERDE "%.2f C" RESET "\n", media);
+    printf("\nMedia de temperatura: %.2f C\n", media);
 
     return media;
 }
@@ -614,8 +656,11 @@ void realizardiagnostico() {
     
     for(int i = 0; i < qtdSensores; i++) {
         if(sensores[i].idAbelha == id) {
-            temp = sensores[i].temperatura;
-            umid = sensores[i].umidade;
+        if (sensores[i].tipo == 1)
+        temp = sensores[i].valor;
+
+        if (sensores[i].tipo == 2)
+        umid = sensores[i].valor;
             encontrado = 1;
             break;
         }
