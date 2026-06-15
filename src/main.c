@@ -611,7 +611,7 @@ float memel() {
 // a variavel resultado recebera a divisão do somatorio total de mel pela quantidade de abelhas da comeia
     float resultado = somamel / qtdAbelhas;
 
-    printf("\n=== RELATORIO: MEDIA DE PRODUCAO DE MEL ===\n");
+    printf("\n" ROXO "=== RELATORIO: MEDIA DE PRODUCAO DE MEL ===" RESET "\n");
     printf("Total de abelhas:  %d\n", qtdAbelhas);
     printf("Soma total:        %.2f kg/mes\n", somamel);
     printf("Media geral:       " VERDE "%.2f kg/mes" RESET "\n", resultado);
