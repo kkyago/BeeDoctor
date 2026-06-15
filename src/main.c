@@ -9,6 +9,7 @@
 #define VERMELHO "\x1b[31m"
 #define VERDE    "\x1b[32m"
 #define AMARELO  "\x1b[33m"
+#define ROXO     "\x1b[35m"
 
 typedef struct {
     int id;
@@ -56,17 +57,14 @@ void menuDiagnostico();
 void realizardiagnostico();
 void recomendarTratamento(float temp, float umid);
 
-void salvarDados();
-void carregarDados();
 float lerFloatValido();
 
 int main() {
-    carregarDados();
-
     int opcao;
 
     do {
-        printf("\n===== SISTEMA BEE MONITOR =====\n");
+        system("cls");
+        printf("\n" ROXO "===== SISTEMA BEE MONITOR =====" RESET "\n");
         printf("1. Gerenciar Abelhas\n");
         printf("2. Gerenciar Sensores\n");
         printf("3. Relatorios\n");
@@ -81,10 +79,13 @@ int main() {
         else if (opcao == 3) menuRelatorios();
         else if (opcao == 4) menuDiagnostico();
         else if (opcao == 5) {
-            salvarDados();
-            printf(VERDE "salvando e saindo...\n" RESET);
+            printf(VERDE "Saindo...\n" RESET);
         }
-        else printf(VERMELHO "opcao invalida\n" RESET);
+        else {
+            printf(VERMELHO "opcao invalida\n" RESET);
+            printf("\nPressione ENTER para continuar...");
+            getchar();
+        }
 
     } while (opcao != 5);
 
@@ -94,7 +95,8 @@ int main() {
 void menuAbelhas() {
     int op;
     do {
-        printf("\n--- Abelhas ---\n");
+        system("cls");
+        printf("\n" ROXO "--- Abelhas ---" RESET "\n");
         printf("1. Cadastrar\n");
         printf("2. Listar\n");
         printf("3. Buscar por nome\n");
@@ -111,18 +113,25 @@ void menuAbelhas() {
         else if (op == 4) alterarAbelha();
         else if (op == 5) removerAbelha();
         else if (op == 6) printf("Voltando...\n");
-        else printf(VERMELHO "opcao invalida\n" RESET);
+        else {
+            printf(VERMELHO "opcao invalida\n" RESET);
+            printf("\nPressione ENTER para continuar...");
+            getchar();
+        }
 
     } while (op != 6);
 }
 
 void cadastrarAbelha() {
+    system("cls");
     if (qtdAbelhas >= MAX_ABELHAS) {
         printf(VERMELHO "Nao da pra cadastrar mais abelhas\n" RESET);
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
-    printf("\n=== CADASTRAR ABELHA ===\n");
+    printf("\n" ROXO "=== CADASTRAR ABELHA ===" RESET "\n");
 
     abelhas[qtdAbelhas].id = proximoIdAbelha;
     proximoIdAbelha++;
@@ -144,18 +153,22 @@ void cadastrarAbelha() {
     abelhas[qtdAbelhas].producaoMel = lerFloatValido();
 
     qtdAbelhas++;
-    salvarDados();
 
     printf(VERDE "Cadastrado!\n" RESET);
+    printf("\nPressione ENTER para voltar...");
+    getchar();
 }
 
 void listarAbelhas() {
+    system("cls");
     if (qtdAbelhas == 0) {
         printf(AMARELO "Nenhuma abelha cadastrada\n" RESET);
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
-    printf("\n=== LISTA DE ABELHAS ===\n");
+    printf("\n" ROXO "=== LISTA DE ABELHAS ===" RESET "\n");
 
     for (int i = 0; i < qtdAbelhas; i++) {
         printf("\nID: %d\n", abelhas[i].id);
@@ -167,18 +180,23 @@ void listarAbelhas() {
     }
 
     printf("Total: %d\n", qtdAbelhas);
+    printf("\nPressione ENTER para voltar...");
+    getchar();
 }
 
 void buscarAbelha() {
+    system("cls");
     if (qtdAbelhas == 0) {
         printf(AMARELO "sem abelhas cadastradas\n" RESET);
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
     char nome[40];
     int achou = 0;
 
-    printf("\n=== BUSCAR ABELHA ===\n");
+    printf("\n" ROXO "=== BUSCAR ABELHA ===" RESET "\n");
     printf("nome popular pra buscar: ");
     fgets(nome, 40, stdin);
     nome[strcspn(nome, "\n")] = '\0';
@@ -199,18 +217,23 @@ void buscarAbelha() {
     if (achou == 0) {
         printf(VERMELHO "Nao tem nenhuma abelha com esse nome\n" RESET);
     }
+    printf("\nPressione ENTER para voltar...");
+    getchar();
 }
 
 void alterarAbelha() {
+    system("cls");
     if (qtdAbelhas == 0) {
         printf(AMARELO "Sem abelhas pra alterar\n" RESET);
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
     int id;
     int pos = -1;
 
-    printf("\n=== ALTERAR ABELHA ===\n");
+    printf("\n" ROXO "=== ALTERAR ABELHA ===" RESET "\n");
     printf("ID da abelha pra alterar: ");
     scanf("%d", &id);
     getchar();
@@ -225,6 +248,8 @@ void alterarAbelha() {
 
     if (pos == -1) {
         printf(VERMELHO "ID %d nao existe\n" RESET, id);
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
@@ -245,13 +270,17 @@ void alterarAbelha() {
     printf("Nova producao de mel: ");
     abelhas[pos].producaoMel = lerFloatValido();
 
-    salvarDados();
     printf(VERDE "Alterado com sucesso\n" RESET);
+    printf("\nPressione ENTER para voltar...");
+    getchar();
 }
 
 void removerAbelha() {
+    system("cls");
     if (qtdAbelhas == 0) {
         printf(AMARELO "sem abelhas pra remover\n" RESET);
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
@@ -259,7 +288,7 @@ void removerAbelha() {
     int pos = -1;
     char conf;
 
-    printf("\n=== REMOVER ABELHA ===\n");
+    printf("\n" ROXO "=== REMOVER ABELHA ===" RESET "\n");
     printf("ID da abelha pra remover: ");
     scanf("%d", &id);
     getchar();
@@ -273,6 +302,8 @@ void removerAbelha() {
 
     if (pos == -1) {
         printf(VERMELHO "Nao tem ID %d cadastrado\n" RESET, id);
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
@@ -280,43 +311,38 @@ void removerAbelha() {
     scanf(" %c", &conf);
     getchar();
 
-if (conf == 'S' || conf == 's') {
-
-    // Remove todos os sensores vinculados a essa abelha
-    for (int i = 0; i < qtdSensores; i++) {
-
-        if (sensores[i].idAbelha == id) {
-
-            for (int j = i; j < qtdSensores - 1; j++) {
-                sensores[j] = sensores[j + 1];
+    if (conf == 'S' || conf == 's') {
+        //remove todos os sensores vinculados a essa abelha
+        for (int i = 0; i < qtdSensores; i++) {
+            if (sensores[i].idAbelha == id) {
+                for (int j = i; j < qtdSensores - 1; j++) {
+                    sensores[j] = sensores[j + 1];
+                }
+                qtdSensores--;
+                i--;
             }
-
-            qtdSensores--;
-            i--;
         }
-    }
 
-    // empurra tudo uma posicao pra tras para nao ficar buraco no vetor
-    for (int i = pos; i < qtdAbelhas - 1; i++) {
-        abelhas[i] = abelhas[i + 1];
-    }
+        //empurra tudo uma posicao pra tras para nao ficar buraco no vetor
+        for (int i = pos; i < qtdAbelhas - 1; i++) {
+            abelhas[i] = abelhas[i + 1];
+        }
 
-    qtdAbelhas--;
+        qtdAbelhas--;
 
-    salvarDados();
-
-    printf(VERDE "Abelha e sensores vinculados removidos!\n" RESET);
-    
+        printf(VERDE "Abelha e sensores vinculados removidos!\n" RESET);
     } else {
         printf(AMARELO "Cancelado\n" RESET);
     }
+    printf("\nPressione ENTER para voltar...");
+    getchar();
 }
-
 
 void menuSensores() {
     int op;
     do {
-        printf("\n--- GERENCIAR SENSORES ---\n");
+        system("cls");
+        printf("\n" ROXO "--- GERENCIAR SENSORES ---" RESET "\n");
         printf("1. Cadastrar sensor\n");
         printf("2. Listar sensores\n");
         printf("3. Buscar sensor por abelha\n");
@@ -335,14 +361,21 @@ void menuSensores() {
             case 4: alterarLeituraSensor(); break;
             case 5: removerSensor(); break;
             case 6: printf("Voltando ao menu principal...\n"); break;
-            default: printf(VERMELHO "Opcao invalida!" RESET "\n");
+            default: {
+                printf(VERMELHO "Opcao invalida!" RESET "\n");
+                printf("\nPressione ENTER para continuar...");
+                getchar();
+            }
         }
     } while(op != 6);
 }
 
 void cadastrarSensor() {
+    system("cls");
     if (qtdSensores >= MAX_SENSORES) {
         printf(VERMELHO "\nLimite de sensores atingido!" RESET "\n");
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
@@ -350,7 +383,7 @@ void cadastrarSensor() {
     int existe = 0;
     int tipo;
 
-    printf("\n=== CADASTRAR SENSOR ===\n");
+    printf("\n" ROXO "=== CADASTRAR SENSOR ===" RESET "\n");
 
     printf("Informe o ID da abelha vinculada: ");
     scanf("%d", &idAbelha);
@@ -365,6 +398,8 @@ void cadastrarSensor() {
 
     if (!existe) {
         printf(VERMELHO "Abelha nao encontrada!\n" RESET);
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
@@ -378,6 +413,8 @@ void cadastrarSensor() {
 
     if(tipo < 1 || tipo > 3) {
         printf(VERMELHO "Tipo invalido!\n" RESET);
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
@@ -390,21 +427,23 @@ void cadastrarSensor() {
 
     qtdSensores++;
 
-    salvarDados();
-
     printf(VERDE "Sensor cadastrado com sucesso!\n" RESET);
+    printf("\nPressione ENTER para voltar...");
+    getchar();
 }
 
 void listarSensores() {
+    system("cls");
     if (qtdSensores == 0) {
         printf(AMARELO "\nNenhum sensor cadastrado.\n" RESET);
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
-    printf("\n=== LISTA DE SENSORES ===\n");
+    printf("\n" ROXO "=== LISTA DE SENSORES ===" RESET "\n");
 
     for (int i = 0; i < qtdSensores; i++) {
-
         printf("\nSensor ID: %d\n", sensores[i].idSensor);
         printf("Abelha vinculada: %d\n", sensores[i].idAbelha);
 
@@ -417,9 +456,12 @@ void listarSensores() {
 
         printf("Leitura: %.2f\n", sensores[i].valor);
     }
+    printf("\nPressione ENTER para voltar...");
+    getchar();
 }
 
 void buscarSensorPorAbelha() {
+    system("cls");
     int idAbelha;
     int encontrou = 0;
 
@@ -428,9 +470,7 @@ void buscarSensorPorAbelha() {
     getchar();
 
     for (int i = 0; i < qtdSensores; i++) {
-
         if (sensores[i].idAbelha == idAbelha) {
-
             printf("\nSensor ID: %d\n", sensores[i].idSensor);
 
             if (sensores[i].tipo == 1)
@@ -449,9 +489,12 @@ void buscarSensorPorAbelha() {
     if (!encontrou) {
         printf(VERMELHO "Nenhum sensor encontrado.\n" RESET);
     }
+    printf("\nPressione ENTER para voltar...");
+    getchar();
 }
 
 void alterarLeituraSensor() {
+    system("cls");
     int idSensor;
     int indice = -1;
 
@@ -468,20 +511,25 @@ void alterarLeituraSensor() {
 
     if (indice == -1) {
         printf(VERMELHO "Sensor nao encontrado!\n" RESET);
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
     printf("Nova leitura: ");
     sensores[indice].valor = lerFloatValido();
 
-    salvarDados();
-
-    printf(VERDE "Leitura atualizada!\n" RESET);
+    printf(VERDE "Leitura updated!\n" RESET);
+    printf("\nPressione ENTER para voltar...");
+    getchar();
 }
 
 void removerSensor() {
+    system("cls");
     if (qtdSensores == 0) {
         printf(AMARELO "\nNenhum sensor cadastrado." RESET "\n");
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
@@ -501,6 +549,8 @@ void removerSensor() {
 
     if (indice == -1) {
         printf(VERMELHO "\nSensor nao encontrado." RESET "\n");
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
@@ -509,15 +559,17 @@ void removerSensor() {
     }
 
     qtdSensores--;
-    salvarDados();
 
     printf(VERDE "\nSensor removido e vetor reorganizado com sucesso!" RESET "\n");
+    printf("\nPressione ENTER para voltar...");
+    getchar();
 }
 
 void menuRelatorios() {
     int opcao;
     do {
-        printf("\n--- Submenu 3 - Relatorios ---\n");
+        system("cls");
+        printf("\n" ROXO "--- Submenu 3 - Relatorios ---" RESET "\n");
         printf("1. Media geral de producao de mel\n");
         printf("2. Media de temperatura dos sensores\n");
         printf("3. Quantidade de abelhas por regiao\n");
@@ -531,14 +583,21 @@ void menuRelatorios() {
             case 2: relatoriosensores(); break;
             case 3: abelhasPorRegiao();  break;
             case 4: printf("Voltando ao menu principal...\n"); break;
-            default: printf(VERMELHO "Opcao invalida!" RESET "\n");
+            default: {
+                printf(VERMELHO "Opcao invalida!" RESET "\n");
+                printf("\nPressione ENTER para continuar...");
+                getchar();
+            }
         }
     } while(opcao != 4);
 }
 
 float memel() {
+    system("cls");
     if (qtdAbelhas == 0) {
         printf(AMARELO "\nNenhuma abelha cadastrada." RESET "\n");
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return 0;
     }
 
@@ -550,21 +609,22 @@ float memel() {
 
     float resultado = somamel / qtdAbelhas;
 
-    printf("\n=== RELATORIO: MEDIA DE PRODUCAO DE MEL ===\n");
+    printf("\n" ROXO "=== RELATORIO: MEDIA DE PRODUCAO DE MEL ===" RESET "\n");
     printf("Total de abelhas:  %d\n", qtdAbelhas);
     printf("Soma total:        %.2f kg/mes\n", somamel);
     printf("Media geral:       " VERDE "%.2f kg/mes" RESET "\n", resultado);
 
+    printf("\nPressione ENTER para voltar...");
+    getchar();
     return resultado;
 }
 
 float relatoriosensores() {
-
+    system("cls");
     float soma = 0;
     int quantidade = 0;
 
     for (int i = 0; i < qtdSensores; i++) {
-
         if (sensores[i].tipo == 1) {
             soma += sensores[i].valor;
             quantidade++;
@@ -573,6 +633,8 @@ float relatoriosensores() {
 
     if (quantidade == 0) {
         printf(AMARELO "Nao existem sensores de temperatura.\n" RESET);
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return 0;
     }
 
@@ -580,12 +642,17 @@ float relatoriosensores() {
 
     printf("\nMedia de temperatura: %.2f C\n", media);
 
+    printf("\nPressione ENTER para voltar...");
+    getchar();
     return media;
 }
 
 void abelhasPorRegiao() {
+    system("cls");
     if (qtdAbelhas == 0) {
         printf(AMARELO "\nNenhuma abelha cadastrada." RESET "\n");
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
 
@@ -611,7 +678,7 @@ void abelhasPorRegiao() {
         }
     }
 
-    printf("\n=== RELATORIO: ABELHAS POR REGIAO ===\n");
+    printf("\n" ROXO "=== RELATORIO: ABELHAS POR REGIAO ===" RESET "\n");
     printf("%-20s | %s\n", "Regiao", "Qtd de Abelhas");
     printf("--------------------------------\n");
     for (int i = 0; i < totalRegioes; i++) {
@@ -619,12 +686,15 @@ void abelhasPorRegiao() {
     }
     printf("--------------------------------\n");
     printf("Total de regioes distintas: %d\n", totalRegioes);
+    printf("\nPressione ENTER para voltar...");
+    getchar();
 }
 
 void menuDiagnostico() {
     int op;
     do {
-        printf("\n=== BEE DOCTOR ===\n");
+        system("cls");
+        printf("\n" ROXO "=== BEE DOCTOR ===" RESET "\n");
         printf("1. Diagnosticar colonia\n");
         printf("2. Voltar\n");
         printf("Opcao: ");
@@ -636,13 +706,16 @@ void menuDiagnostico() {
 }
 
 void realizardiagnostico() {
+    system("cls");
     if(qtdAbelhas == 0) {
         printf(VERMELHO "\nNenhuma abelha cadastrada!" RESET "\n");
+        printf("\nPressione ENTER para voltar...");
+        getchar();
         return;
     }
     
     int id;
-    float temp, umid;
+    float temp = 0, umid = 0;
     int encontrado = 0;
     
     printf("\nColonias disponiveis:\n");
@@ -656,13 +729,13 @@ void realizardiagnostico() {
     
     for(int i = 0; i < qtdSensores; i++) {
         if(sensores[i].idAbelha == id) {
-        if (sensores[i].tipo == 1)
-        temp = sensores[i].valor;
+            if (sensores[i].tipo == 1)
+                temp = sensores[i].valor;
 
-        if (sensores[i].tipo == 2)
-        umid = sensores[i].valor;
+            if (sensores[i].tipo == 2)
+                umid = sensores[i].valor;
+                
             encontrado = 1;
-            break;
         }
     }
     
@@ -676,7 +749,7 @@ void realizardiagnostico() {
         printf("\nTemperatura: %.1fC | Umidade: %.1f%%\n", temp, umid);
     }
     
-    printf("\n=== DIAGNOSTICO ===\n");
+    printf("\n" ROXO "=== DIAGNOSTICO ===" RESET "\n");
     
     if(temp < 32 || temp > 36) {
         printf(VERMELHO "ALERTA: Temperatura inadequada (ideal: 32-36C)" RESET "\n");
@@ -706,12 +779,12 @@ void realizardiagnostico() {
     
     recomendarTratamento(temp, umid);
 
-    printf("\nPressione ENTER...");
+    printf("\nPressione ENTER para voltar...");
     getchar();
 }
 
 void recomendarTratamento(float temp, float umid) {
-    printf("\n=== RECOMENDACOES BEE DOCTOR ===\n");
+    printf("\n" ROXO "=== RECOMENDACOES BEE DOCTOR ===" RESET "\n");
 
     if (temp >= 32 && temp <= 36 && umid >= 50 && umid <= 80) {
         printf(VERDE "COLONIA SAUDAVEL" RESET "\n");
@@ -755,50 +828,13 @@ void recomendarTratamento(float temp, float umid) {
         printf("- Avaliar riscos de doencas e perda da colonia.\n");
     }
 
-    printf("\n=================================\n");
-}
-
-void salvarDados() {
-    FILE *arq = fopen("dados_sistema.dat", "wb");
-    if (arq == NULL) {
-        return;
-    }
-
-    //salva as abelhas
-    fwrite(&qtdAbelhas, sizeof(int), 1, arq);
-    fwrite(&proximoIdAbelha, sizeof(int), 1, arq);
-    fwrite(abelhas, sizeof(Abelha), qtdAbelhas, arq);
-
-    //salva os sensores
-    fwrite(&qtdSensores, sizeof(int), 1, arq);
-    fwrite(&proximoIdSensor, sizeof(int), 1, arq);
-    fwrite(sensores, sizeof(Sensor), qtdSensores, arq);
-
-    fclose(arq);
-}
-
-void carregarDados() {
-    FILE *arq = fopen("dados_sistema.dat", "rb");
-    if (arq == NULL) {
-        return; //se nao tem arquivo nao faz nada
-    }
-
-    fread(&qtdAbelhas, sizeof(int), 1, arq);
-    fread(&proximoIdAbelha, sizeof(int), 1, arq);
-    fread(abelhas, sizeof(Abelha), qtdAbelhas, arq);
-
-    fread(&qtdSensores, sizeof(int), 1, arq);
-    fread(&proximoIdSensor, sizeof(int), 1, arq);
-    fread(sensores, sizeof(Sensor), qtdSensores, arq);
-
-    fclose(arq);
+    printf("=================================\n");
 }
 
 float lerFloatValido() {
     float valor;
     char c;
 
-    //fica tentando ate o usuario digitar um numero
     while (scanf("%f", &valor) != 1) {
         printf(VERMELHO "Digite apenas numeros: " RESET);
         while ((c = getchar()) != '\n' && c != EOF);
