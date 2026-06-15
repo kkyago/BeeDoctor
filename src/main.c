@@ -566,7 +566,7 @@ void removerSensor() {
 }
 
 void menuRelatorios() {
-    int opcao;
+    int opcao; //variavel que recebera o que se deseja
     do {
         system("cls");
         printf("\n" ROXO "--- Submenu 3 - Relatorios ---" RESET "\n");
@@ -594,6 +594,7 @@ void menuRelatorios() {
 
 float memel() {
     system("cls");
+    //caso não haja sensores de temperatura cadastrados
     if (qtdAbelhas == 0) {
         printf(AMARELO "\nNenhuma abelha cadastrada." RESET "\n");
         printf("\nPressione ENTER para voltar...");
@@ -601,12 +602,13 @@ float memel() {
         return 0;
     }
 
-    float somamel = 0;
+    float somamel = 0; //inicialização de variavel
 
     for (int i = 0; i < qtdAbelhas; i++) {
         somamel += abelhas[i].producaoMel;
+        //enquanto i for menor que a quantidade de abelhas cadastradas, a variavel somamel ira armazenar toda a produção de mel da comeia
     }
-
+// a variavel resultado recebera a divisão do somatorio total de mel pela quantidade de abelhas da comeia
     float resultado = somamel / qtdAbelhas;
 
     printf("\n" ROXO "=== RELATORIO: MEDIA DE PRODUCAO DE MEL ===" RESET "\n");
@@ -621,23 +623,24 @@ float memel() {
 
 float relatoriosensores() {
     system("cls");
-    float soma = 0;
-    int quantidade = 0;
+    float soma = 0;//inicializando a soma das temperaturas
+    int quantidade = 0;//inicializando a quantidade de sensores existentes na comeia
 
     for (int i = 0; i < qtdSensores; i++) {
+//enquanto i for menor que a quantidade de sensores, a variavel soma recebera o valor acumulado da temperatura dos sensores
         if (sensores[i].tipo == 1) {
             soma += sensores[i].valor;
-            quantidade++;
+            quantidade++;// aqui será contabilizado a quantidade de sensores existentes
         }
     }
-
+//caso não haja sensores de temperatura cadastrados
     if (quantidade == 0) {
         printf(AMARELO "Nao existem sensores de temperatura.\n" RESET);
         printf("\nPressione ENTER para voltar...");
         getchar();
         return 0;
     }
-
+//a variavel media recebera a divisão da soma total das temperaturas sobre a quantidade de sensores
     float media = soma / quantidade;
 
     printf("\nMedia de temperatura: %.2f C\n", media);
@@ -649,36 +652,39 @@ float relatoriosensores() {
 
 void abelhasPorRegiao() {
     system("cls");
+	//caso não haja regiões cadastradas
     if (qtdAbelhas == 0) {
         printf(AMARELO "\nNenhuma abelha cadastrada." RESET "\n");
         printf("\nPressione ENTER para voltar...");
         getchar();
         return;
+        //função do tipo void, não ha nada há frente do return
     }
 
-    char regioes[MAX_ABELHAS][30];
-    int contagens[MAX_ABELHAS];
-    int totalRegioes = 0;
+    char regioes[MAX_ABELHAS][30];//nome e quantidade de regiões cadastradas
+    int contagens[MAX_ABELHAS];//variavel contadora para quantidade de abelhas por região
+    int totalRegioes = 0;//inicializando variavel
 
-    for (int i = 0; i < qtdAbelhas; i++) {
-        int encontrou = 0;
+    for (int i = 0; i < qtdAbelhas; i++) { // 
+        int encontrou = 0;//inicializando variavel encontrou 
 
         for (int j = 0; j < totalRegioes; j++) {
-            if (strcmp(regioes[j], abelhas[i].regiao) == 0) {
-                contagens[j]++; 
-                encontrou = 1;
+            if (strcmp(regioes[j], abelhas[i].regiao) == 0)//compara se a região da abelha já foi cadastrada
+			 {
+                contagens[j]++; //aumenta a quantidade de abelhas na região j
+                encontrou = 1;//evita de cadstrar a mesma região novamente
                 break;
             }
         }
 
-        if (!encontrou) {
+        if (encontrou==0) {//como o primeiro valor de j sera 0, ele executara essa parte
             strcpy(regioes[totalRegioes], abelhas[i].regiao);
-            contagens[totalRegioes] = 1;
-            totalRegioes++;
+            contagens[totalRegioes] = 1;//vetor contagens na posição da quantidade de regiões encontradas
+            totalRegioes++; //incrementação na variavel e mostra a quantidade de regiões distintas
         }
     }
 
-    printf("\n" ROXO "=== RELATORIO: ABELHAS POR REGIAO ===" RESET "\n");
+    printf("\n=== RELATORIO: ABELHAS POR REGIAO ===\n");
     printf("%-20s | %s\n", "Regiao", "Qtd de Abelhas");
     printf("--------------------------------\n");
     for (int i = 0; i < totalRegioes; i++) {
