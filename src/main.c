@@ -848,7 +848,7 @@ printf("- Evitar exposiçao excessiva ao sol.\n");
 printf("- disponiblizar fontes de agua proximas a colmeia.\n");
 printf("- manter o ambiente com umidade adequada\n");
 }
-if(umid <50 || umid >80) && (temp <32 || temp>36){
+if(umid <50 || umid >80) && (temp <32 || temp>36)){
 // condiçao critica
 	printf("\n" VERMELHO " ESTADO CRITICO " RESET "\n");
 	printf("- realizar inspeção imediata na colmeia\n");
