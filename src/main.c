@@ -20,7 +20,7 @@ typedef struct {
     float producaoMel;
 } Abelha;
 
-//vetor global que armazena todas as abelhas cadastradas, com capacidade maxima definida por MAX_ABELHAS
+//vetor global que armazena todas as abelhas cadastradas
 Abelha abelhas[MAX_ABELHAS];
 int qtdAbelhas = 0;
 int proximoIdAbelha = 1;
@@ -218,7 +218,7 @@ void buscarAbelha() {
     for (int i = 0; i < qtdAbelhas; i++) {
         //strcmp compara as duas strings e retorna 0 se forem identicas
         if (strcmp(abelhas[i].nomePopular, nome) == 0) {
-            printf(VERDE "\nachei:\n" RESET);
+            printf(VERDE "\nAchado(s):\n" RESET);
             printf("ID: %d\n", abelhas[i].id);
             printf("Nome popular: %s\n", abelhas[i].nomePopular);
             printf("Nome cientifico: %s\n", abelhas[i].nomeCientifico);
