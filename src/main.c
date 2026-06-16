@@ -811,64 +811,49 @@ void realizardiagnostico() {
 }
 
 void recomendarTratamento(float temp, float umid) {
-    printf("\n" ROXO "=== RECOMENDACOES BEE DOCTOR ===" RESET "\n");
-
-    if (temp >= 32 && temp <= 36 && umid >= 50 && umid <= 80) {
-        printf(VERDE "COLONIA SAUDAVEL" RESET "\n");
-        printf("- Manter monitoramento periodico.\n");
-        printf("- Continuar manejo atual.\n");
-        printf("- Realizar inspecoes preventivas.\n");
-    }
-
-    if (temp < 32) {
-        printf(AMARELO "PROBLEMA: TEMPERATURA BAIXA" RESET "\n");
-        printf("- Melhorar isolamento da colmeia.\n");
-        printf("- Evitar ventos fortes.\n");
-        printf("- Monitorar temperatura diariamente.\n");
-    }
-
-    if (temp > 36) {
-        printf(AMARELO "PROBLEMA: TEMPERATURA ELEVADA" RESET "\n");
-        printf("- Instalar sombra sobre a colmeia.\n");
-        printf("- Melhorar ventilacao.\n");
-        printf("- Disponibilizar agua para resfriamento.\n");
-    }
-
-    if (umid < 50) {
-        printf(AMARELO "PROBLEMA: BAIXA UMIDADE" RESET "\n");
-        printf("- Verificar disponibilidade de agua.\n");
-        printf("- Evitar exposicao excessiva ao sol.\n");
-        printf("- Acompanhar as proximas leituras.\n");
-    }
-
-    if (umid > 80) {
-        printf(AMARELO "PROBLEMA: UMIDADE ELEVADA" RESET "\n");
-        printf("- Melhorar drenagem do local.\n");
-        printf("- Aumentar ventilacao da colmeia.\n");
-        printf("- Verificar possivel aparecimento de fungos.\n");
-    }
-
-    if ((temp < 30 && umid > 80) || (temp > 35 && umid > 80)) {
-        printf(VERMELHO "ALERTA CRITICO" RESET "\n");
-        printf("- Realizar inspecao urgente da colonia.\n");
-        printf("- Corrigir temperatura e umidade imediatamente.\n");
-        printf("- Avaliar riscos de doencas e perda da colonia.\n");
-    }
-
-    printf("=================================\n");
+// frase incial
+ printf("\n" ROXO "RECOMENDAÇAO DE TRATAMENTO" RESET "\n");
+if(umid >=50 && umid <=80 && temp >=32 && temp <=36){
+// codndiçao totalmente estavel
+	
+printf("\n" VERDE "COLONIA SAUDAVEL" RESET "\n");
+printf("-Nenhuma intervenção nescessaria.\n");
+printf("-Mantenha o acompanhamento frequente.\n");
+}
+if(temp >36){
+	// alta temperatura
+printf("\n" AMARELO "TEMPERATURA ELEVADA" RESET "\n");
+printf("- Utilizaçao de agua para o resfriamento da colmeia.\n");
+	printf("- Instalaçao de sombras no espaço da colmeia.\n");
+printf("- Melhoramento do sistema de ventilaçao np espaço da colmeia.\n");
+}
+if(temp <32){
+	//baixa temperatura
+printf("\n" AMARELO "TEMPERATURA BAIXA" RESET "\n");
+printf("- Poaicionar a colmeia em locais com maior incidencia solar.\n");
+printf("- Melhorar o siolamento termico da colmeia.\n");
+printf("- Reduzir a entrada de ar frio na colmeia.\n");
+}
+if(umid>80){
+	//alta umidade
+printf("\n" AMARELO "ALTA UMIDADE" RESET "\n");
+printf("- Melhorar ventilaçao da colmeia.\n");
+printf("- Garantir boa DRenagem ao redor da colmeia.\n");
+printf("- Monitorar a presença de fungos e doencças.\n");
+}
+if(umid <50){
+	// baixa umidade
+printf("\n" AMARELO " BAIXA UMIDADE " RESET "\n");
+printf("- Evitar exposiçao excessiva ao sol.\n");
+printf("- disponiblizar fontes de agua proximas a colmeia.\n");
+printf("- manter o ambiente com umidade adequada\n");
+}
+if(umid <50 || umid >80) && (temp <32 || temp>36){
+// condiçao critica
+	printf("\n" VERMELHO " ESTADO CRITICO " RESET "\n");
+	printf("- realizar inspeção imediata na colmeia\n");
+	printf("- reforçar monitoramento nas proximas horas\n");
+	printf("- solicitar especialista em caso de aparente persitencia de problema\n");
 }
 
-//funcao que garante que o usuario so consiga inserir um numero float valido, evitando travamento do programa
-float lerFloatValido() {
-    float valor;
-    char c;
-
-    //o loop continua enquanto o scanf nao conseguir ler um float valido, o scanf retorna o numero de itens lidos com sucesso; se nao for 1, a entrada foi invalida
-    while (scanf("%f", &valor) != 1) {
-        printf(VERMELHO "Digite apenas numeros: " RESET);
-        //descarta todos os caracteres invalidos que sobraram no buffer ate encontrar '\n' ou fim de arquivo
-        while ((c = getchar()) != '\n' && c != EOF);
-    }
-    getchar();
-    return valor;
-}
+	
