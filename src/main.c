@@ -11,14 +11,16 @@
 #define AMARELO  "\x1b[33m"
 #define ROXO     "\x1b[35m"
 
+//struct que define o tipo Abelha, agrupando todos os dados de uma abelha em uma unica estrutura
 typedef struct {
     int id;
     char nomePopular[40];
     char nomeCientifico[50];
     char regiao[30];
-    float producaoMel; 
+    float producaoMel;
 } Abelha;
 
+//vetor global que armazena todas as abelhas cadastradas, com capacidade maxima definida por MAX_ABELHAS
 Abelha abelhas[MAX_ABELHAS];
 int qtdAbelhas = 0;
 int proximoIdAbelha = 1;
@@ -59,11 +61,12 @@ void recomendarTratamento(float temp, float umid);
 
 float lerFloatValido();
 
+//funcao principal, ponto de entrada do programa
 int main() {
     int opcao;
 
     do {
-        system("cls");
+        system("cls"); //limpa a tela a cada iteracao para manter a interface organizada
         printf("\n" ROXO "===== SISTEMA BEE MONITOR =====" RESET "\n");
         printf("1. Gerenciar Abelhas\n");
         printf("2. Gerenciar Sensores\n");
@@ -72,7 +75,7 @@ int main() {
         printf("5. Sair\n");
         printf("opcao: ");
         scanf("%d", &opcao);
-        getchar();
+        getchar(); //consome o '\n' que sobra no buffer apos o scanf, evitando que o proximo fgets leia uma linha vazia
 
         if (opcao == 1) menuAbelhas();
         else if (opcao == 2) menuSensores();
@@ -87,11 +90,12 @@ int main() {
             getchar();
         }
 
-    } while (opcao != 5);
+    } while (opcao != 5); //o loop continua ate o usuario digitar 5 para sair
 
     return 0;
 }
 
+//submenu de abelhas que chama as funcoes do CRUD
 void menuAbelhas() {
     int op;
     do {
@@ -122,8 +126,10 @@ void menuAbelhas() {
     } while (op != 6);
 }
 
+//funcao para cadastrar uma nova abelha no vetor global
 void cadastrarAbelha() {
     system("cls");
+    //verifica se o vetor ja atingiu o limite
     if (qtdAbelhas >= MAX_ABELHAS) {
         printf(VERMELHO "Nao da pra cadastrar mais abelhas\n" RESET);
         printf("\nPressione ENTER para voltar...");
@@ -133,12 +139,15 @@ void cadastrarAbelha() {
 
     printf("\n" ROXO "=== CADASTRAR ABELHA ===" RESET "\n");
 
+    //atribui o proximo ID disponivel a nova abelha e ja incrementa o contador
     abelhas[qtdAbelhas].id = proximoIdAbelha;
     proximoIdAbelha++;
     printf("id: %d\n", abelhas[qtdAbelhas].id);
 
     printf("Nome popular: ");
+    //fgets e usado aqui pois aceita espacos no meio do texto
     fgets(abelhas[qtdAbelhas].nomePopular, 40, stdin);
+    //strcspn substitui o "\n" que o fgets coloca no final da string por "\0" caractere nulo
     abelhas[qtdAbelhas].nomePopular[strcspn(abelhas[qtdAbelhas].nomePopular, "\n")] = '\0';
 
     printf("Nome cientifico: ");
@@ -150,8 +159,9 @@ void cadastrarAbelha() {
     abelhas[qtdAbelhas].regiao[strcspn(abelhas[qtdAbelhas].regiao, "\n")] = '\0';
 
     printf("Producao de mel (kg/mes): ");
-    abelhas[qtdAbelhas].producaoMel = lerFloatValido();
+    abelhas[qtdAbelhas].producaoMel = lerFloatValido(); //garante que so sera aceito um numero valido
 
+    //no final de tudo incrementa a variavel da proxima abelha
     qtdAbelhas++;
 
     printf(VERDE "Cadastrado!\n" RESET);
@@ -159,8 +169,10 @@ void cadastrarAbelha() {
     getchar();
 }
 
+//percorre o vetor das abelhas e imprime os dados de todas as abelhas cadastradas
 void listarAbelhas() {
     system("cls");
+    //verifica se ha abelhas antes de tentar listar, evitando exibir uma lista vazia sem aviso
     if (qtdAbelhas == 0) {
         printf(AMARELO "Nenhuma abelha cadastrada\n" RESET);
         printf("\nPressione ENTER para voltar...");
@@ -170,6 +182,7 @@ void listarAbelhas() {
 
     printf("\n" ROXO "=== LISTA DE ABELHAS ===" RESET "\n");
 
+    //loop que percorre o vetor
     for (int i = 0; i < qtdAbelhas; i++) {
         printf("\nID: %d\n", abelhas[i].id);
         printf("Nome popular: %s\n", abelhas[i].nomePopular);
@@ -194,14 +207,16 @@ void buscarAbelha() {
     }
 
     char nome[40];
-    int achou = 0;
+    int achou = 0; //var que diz se pelo menos uma abelha foi achada, 0 = falso
 
     printf("\n" ROXO "=== BUSCAR ABELHA ===" RESET "\n");
     printf("nome popular pra buscar: ");
     fgets(nome, 40, stdin);
     nome[strcspn(nome, "\n")] = '\0';
 
+    //percorre o vetor
     for (int i = 0; i < qtdAbelhas; i++) {
+        //strcmp compara as duas strings e retorna 0 se forem identicas
         if (strcmp(abelhas[i].nomePopular, nome) == 0) {
             printf(VERDE "\nachei:\n" RESET);
             printf("ID: %d\n", abelhas[i].id);
@@ -210,7 +225,7 @@ void buscarAbelha() {
             printf("Regiao: %s\n", abelhas[i].regiao);
             printf("Mel: %.2f kg/mes\n", abelhas[i].producaoMel);
             printf("---\n");
-            achou = 1;
+            achou = 1; //var 1 = indica que encontrou ao menos uma abelha
         }
     }
 
@@ -221,6 +236,7 @@ void buscarAbelha() {
     getchar();
 }
 
+//permite alterar os dados da abelha
 void alterarAbelha() {
     system("cls");
     if (qtdAbelhas == 0) {
@@ -231,21 +247,22 @@ void alterarAbelha() {
     }
 
     int id;
-    int pos = -1;
+    int pos = -1; //var que vai guardar o indice da abelha no vetor, -1 = ainda nao foi encontrada
 
     printf("\n" ROXO "=== ALTERAR ABELHA ===" RESET "\n");
     printf("ID da abelha pra alterar: ");
     scanf("%d", &id);
     getchar();
 
-    //percorre o vetor procurando a abelha
+    //procura o id da abelha que foi digitado
     for (int i = 0; i < qtdAbelhas; i++) {
         if (abelhas[i].id == id) {
-            pos = i;
+            pos = i; //armazena indice na variavel
             break;
         }
     }
 
+    //se pos ainda for -1 depois da busca é pq nenhuma abelha com o id foi achada
     if (pos == -1) {
         printf(VERMELHO "ID %d nao existe\n" RESET, id);
         printf("\nPressione ENTER para voltar...");
@@ -255,6 +272,7 @@ void alterarAbelha() {
 
     printf("Alterando abelha %d\n", id);
 
+    //sobrescreve os dados da abelha encontrada
     printf("Novo nome popular: ");
     fgets(abelhas[pos].nomePopular, 40, stdin);
     abelhas[pos].nomePopular[strcspn(abelhas[pos].nomePopular, "\n")] = '\0';
@@ -275,6 +293,7 @@ void alterarAbelha() {
     getchar();
 }
 
+//remove a abelha e o sensor dela
 void removerAbelha() {
     system("cls");
     if (qtdAbelhas == 0) {
@@ -286,13 +305,14 @@ void removerAbelha() {
 
     int id;
     int pos = -1;
-    char conf;
+    char conf; //var de confirmação
 
     printf("\n" ROXO "=== REMOVER ABELHA ===" RESET "\n");
     printf("ID da abelha pra remover: ");
     scanf("%d", &id);
     getchar();
 
+    //busca o ID da abelha digitada
     for (int i = 0; i < qtdAbelhas; i++) {
         if (abelhas[i].id == id) {
             pos = i;
@@ -312,18 +332,19 @@ void removerAbelha() {
     getchar();
 
     if (conf == 'S' || conf == 's') {
-        //remove todos os sensores vinculados a essa abelha
+        //deleta sensores que o idabelha é igual ao id digitado pelo user
         for (int i = 0; i < qtdSensores; i++) {
             if (sensores[i].idAbelha == id) {
+                //desloca todos os sensores seguintes uma posicao para a esquerda, sobrescrevendo o sensor removido
                 for (int j = i; j < qtdSensores - 1; j++) {
                     sensores[j] = sensores[j + 1];
                 }
-                qtdSensores--;
+                qtdSensores--; //reduz a var em 1 apos remover do vetor
                 i--;
             }
         }
 
-        //empurra tudo uma posicao pra tras para nao ficar buraco no vetor
+        //desloca todas as abelhas uma posicao para a esquerda, fechando o buraco no vetor
         for (int i = pos; i < qtdAbelhas - 1; i++) {
             abelhas[i] = abelhas[i + 1];
         }
@@ -837,12 +858,15 @@ void recomendarTratamento(float temp, float umid) {
     printf("=================================\n");
 }
 
+//funcao que garante que o usuario so consiga inserir um numero float valido, evitando travamento do programa
 float lerFloatValido() {
     float valor;
     char c;
 
+    //o loop continua enquanto o scanf nao conseguir ler um float valido, o scanf retorna o numero de itens lidos com sucesso; se nao for 1, a entrada foi invalida
     while (scanf("%f", &valor) != 1) {
         printf(VERMELHO "Digite apenas numeros: " RESET);
+        //descarta todos os caracteres invalidos que sobraram no buffer ate encontrar '\n' ou fim de arquivo
         while ((c = getchar()) != '\n' && c != EOF);
     }
     getchar();
