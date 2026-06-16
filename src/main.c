@@ -358,11 +358,11 @@ void removerAbelha() {
     printf("\nPressione ENTER para voltar...");
     getchar();
 }
-
+// menu dos sensores
 void menuSensores() {
     int op;
     do {
-        system("cls");
+        system("cls"); // limpa a tela
         printf("\n" ROXO "--- GERENCIAR SENSORES ---" RESET "\n");
         printf("1. Cadastrar sensor\n");
         printf("2. Listar sensores\n");
@@ -373,7 +373,7 @@ void menuSensores() {
         printf("Opcao: ");
 
         scanf("%d", &op);
-        getchar();
+        getchar(); // limpa o buffer
 
         switch(op) {
             case 1: cadastrarSensor(); break;
@@ -388,11 +388,11 @@ void menuSensores() {
                 getchar();
             }
         }
-    } while(op != 6);
+    } while(op != 6); // fica no menu até escolher voltar
 }
-
+// cadastra um novo sensor
 void cadastrarSensor() {
-    system("cls");
+    system("cls"); //verifica se o vetor ja atingiu o limite
     if (qtdSensores >= MAX_SENSORES) {
         printf(VERMELHO "\nLimite de sensores atingido!" RESET "\n");
         printf("\nPressione ENTER para voltar...");
@@ -405,25 +405,25 @@ void cadastrarSensor() {
     int tipo;
 
     printf("\n" ROXO "=== CADASTRAR SENSOR ===" RESET "\n");
-
+    // solicita o ID da abelha
     printf("Informe o ID da abelha vinculada: ");
     scanf("%d", &idAbelha);
     getchar();
-
+    // procura a abelha no vetor
     for (int i = 0; i < qtdAbelhas; i++) {
         if (abelhas[i].id == idAbelha) {
             existe = 1;
             break;
         }
     }
-
+    // se a abelha não existir,cancela o cadastro
     if (!existe) {
         printf(VERMELHO "Abelha nao encontrada!\n" RESET);
         printf("\nPressione ENTER para voltar...");
         getchar();
         return;
     }
-
+    // Escolha do tipo do sensor
     printf("\nTipo do sensor:\n");
     printf("1 - Temperatura\n");
     printf("2 - Umidade\n");
@@ -431,31 +431,31 @@ void cadastrarSensor() {
     printf("Opcao: ");
     scanf("%d", &tipo);
     getchar();
-
+    // validação do tipo escolhido
     if(tipo < 1 || tipo > 3) {
         printf(VERMELHO "Tipo invalido!\n" RESET);
         printf("\nPressione ENTER para voltar...");
         getchar();
         return;
     }
-
+    // preenche os dados do sensor
     sensores[qtdSensores].idSensor = proximoIdSensor++;
     sensores[qtdSensores].idAbelha = idAbelha;
     sensores[qtdSensores].tipo = tipo;
-
+    // lê o valor do sensor
     printf("Valor da leitura: ");
     sensores[qtdSensores].valor = lerFloatValido();
-
+    // incrementa a quantidade de sensores cadastrados
     qtdSensores++;
 
     printf(VERDE "Sensor cadastrado com sucesso!\n" RESET);
     printf("\nPressione ENTER para voltar...");
     getchar();
 }
-
+// lista todos os sensores cadastrados
 void listarSensores() {
     system("cls");
-    if (qtdSensores == 0) {
+    if (qtdSensores == 0) { // se não encontrar o sensor
         printf(AMARELO "\nNenhum sensor cadastrado.\n" RESET);
         printf("\nPressione ENTER para voltar...");
         getchar();
@@ -467,7 +467,7 @@ void listarSensores() {
     for (int i = 0; i < qtdSensores; i++) {
         printf("\nSensor ID: %d\n", sensores[i].idSensor);
         printf("Abelha vinculada: %d\n", sensores[i].idAbelha);
-
+        // identifica o tipo do sensor
         if (sensores[i].tipo == 1)
             printf("Tipo: Temperatura\n");
         else if (sensores[i].tipo == 2)
@@ -489,11 +489,11 @@ void buscarSensorPorAbelha() {
     printf("Digite o ID da abelha: ");
     scanf("%d", &idAbelha);
     getchar();
-
+    // procura sensores vinculados ao ID informado
     for (int i = 0; i < qtdSensores; i++) {
         if (sensores[i].idAbelha == idAbelha) {
             printf("\nSensor ID: %d\n", sensores[i].idSensor);
-
+            // mostrando o tipo do sensor
             if (sensores[i].tipo == 1)
                 printf("Tipo: Temperatura\n");
             else if (sensores[i].tipo == 2)
@@ -506,14 +506,14 @@ void buscarSensorPorAbelha() {
             encontrou = 1;
         }
     }
-
+    // se não encontrar o sensor dnv
     if (!encontrou) {
         printf(VERMELHO "Nenhum sensor encontrado.\n" RESET);
     }
     printf("\nPressione ENTER para voltar...");
     getchar();
 }
-
+// alteração do valor de leitura de um sensor
 void alterarLeituraSensor() {
     system("cls");
     int idSensor;
@@ -522,32 +522,32 @@ void alterarLeituraSensor() {
     printf("ID do sensor: ");
     scanf("%d", &idSensor);
     getchar();
-
+    // busca o sensor pelo ID
     for (int i = 0; i < qtdSensores; i++) {
         if (sensores[i].idSensor == idSensor) {
             indice = i;
             break;
         }
     }
-
+    // se não encontrar o sensor dnv mais uma vez
     if (indice == -1) {
         printf(VERMELHO "Sensor nao encontrado!\n" RESET);
         printf("\nPressione ENTER para voltar...");
         getchar();
         return;
     }
-
+    // atualiza a leitura
     printf("Nova leitura: ");
     sensores[indice].valor = lerFloatValido();
 
-    printf(VERDE "Leitura updated!\n" RESET);
+    printf(VERDE "Leitura atualizada!\n" RESET);
     printf("\nPressione ENTER para voltar...");
     getchar();
 }
-
+// remoção de um sensor do sistema
 void removerSensor() {
     system("cls");
-    if (qtdSensores == 0) {
+    if (qtdSensores == 0) { // verifica se tem sensores cadastrados
         printf(AMARELO "\nNenhum sensor cadastrado." RESET "\n");
         printf("\nPressione ENTER para voltar...");
         getchar();
@@ -560,25 +560,25 @@ void removerSensor() {
     printf("\nDigite o ID do sensor a remover: ");
     scanf("%d", &idSensor);
     getchar();
-
+    // procura o sensor pelo ID
     for (int i = 0; i < qtdSensores; i++) {
         if (sensores[i].idSensor == idSensor) {
             indice = i;
             break;
         }
     }
-
+    // se não encontrar o sensor dnv mais uma vez parte 2
     if (indice == -1) {
         printf(VERMELHO "\nSensor nao encontrado." RESET "\n");
         printf("\nPressione ENTER para voltar...");
         getchar();
         return;
     }
-
+    // reorganiza o vetor sobrescrevendo o sensor removido
     for (int i = indice; i < qtdSensores - 1; i++) {
         sensores[i] = sensores[i + 1];
     }
-
+    // atualiza a quantidade de sensores
     qtdSensores--;
 
     printf(VERDE "\nSensor removido e vetor reorganizado com sucesso!" RESET "\n");
@@ -814,7 +814,7 @@ void recomendarTratamento(float temp, float umid) {
 // frase incial
  printf("\n" ROXO "RECOMENDAÇAO DE TRATAMENTO" RESET "\n");
 if(umid >=50 && umid <=80 && temp >=32 && temp <=36){
-// codndiçao totalmente estavel
+// condicao totalmente estavel
 	
 printf("\n" VERDE "COLONIA SAUDAVEL" RESET "\n");
 printf("-Nenhuma intervenção nescessaria.\n");
