@@ -855,5 +855,6 @@ if(umid <50 || umid >80) && (temp <32 || temp>36)){
 	printf("- reforçar monitoramento nas proximas horas\n");
 	printf("- solicitar especialista em caso de aparente persitencia de problema\n");
 }
+}
 
 	
